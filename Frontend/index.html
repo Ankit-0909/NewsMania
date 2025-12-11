@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsMania</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- HAMBURGER MENU CSS -->
+    <style>
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            padding: 10px;
+            z-index: 1001;
+        }
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #d32f2f;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+
+        /* Navbar */
+        #navbar {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            position: absolute;
+            top: 180px;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        #navbar.open {
+            max-height: 500px;
+        }
+        #navbar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+            /* transition: background 0.2s; */
+        }
+        #navbar a:hover {
+            background: #f5f5f5;
+        }
+
+        /* Mobile View */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .navbar > ul { display: none; }
+        }
+
+        /* Desktop View */
+        @media (min-width: 769px) {
+            #navbar { display: none !important; }
+            .navbar > ul { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="left-section">
+            <div class="edition">Edition: IN <select><option>English</option></select></div>
+            <div id="date-time"></div>
+        </div>
+        <div class="logo">NewsMania</div>
+        <div class="right-section">
+            <button>Read ePaper</button>
+            <button>Subscribe to NM+</button>
+            <button>Sign In</button>
+            <div class="social">
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.675 0h-21.35C.597 0 0 .597 0 1.333v21.334C0 23.403.597 24 1.325 24h11.494v-9.294H9.692v-3.622h3.127V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.728 0 1.325-.597 1.325-1.333V1.333C24 .597 23.403 0 22.675 0z"/>
+                    </svg>
+                </a>
+                <a href="https://x.com" target="_blank" aria-label="X (Twitter)">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="https://youtube.com" target="_blank" aria-label="YouTube">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.5c0 .045-7.505.045-9.376.55a3.016 3.016 0 0 0-2.122 2.136C3.5 8.775 3.5 12 3.5 12s0 3.225.002 3.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.55 9.376.55s7.505-.045 9.376-.55a3.016 3.016 0 0 0 2.122-2.136C23.5 15.225 23.5 12 23.5 12s0-3.225-.002-3.814zM9.75 15.02l-.001-6.04 5.823 3.02-5.822 3.02z"/>
+                    </svg>
+                </a>
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="india.html">India</a></li>
+            <li><a href="world.html">World</a></li>
+            <li><a href="business.html">Business</a></li>
+            <li><a href="tech.html">Tech</a></li>
+            <li><a href="sports.html">Sports</a></li>
+            <li><a href="entertainment.html">Entertainment</a></li>
+            <li><a href="education.html">Education</a></li>
+            <li><a href="lifestyle.html">Life & Style</a></li>
+        </ul>
+
+        <!-- MOBILE NAVBAR -->
+        <div id="navbar">
+            <a href="index.html">Home</a>
+            <a href="india.html">India</a>
+            <a href="world.html">World</a>
+            <a href="business.html">Business</a>
+            <a href="tech.html">Tech</a>
+            <a href="sports.html">Sports</a>
+            <a href="entertainment.html">Entertainment</a>
+            <a href="education.html">Education</a>
+            <a href="lifestyle.html">Life & Style</a>
+        </div>
+    </nav>
+
+    <!-- BREAKING NEWS -->
+    <div class="breaking-news">
+        <span class="now-playing">Now Playing</span>
+        <a href="https://www.youtube.com" class="youtube-link">Watch on YouTube</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="headline" id="headline"></div>
+
+        <section id="india" class="sub-section"><h2>India</h2><div class="articles" id="india-articles"></div><button class="load-more" data-category="India">Load More</button></section>
+        <section id="world" class="sub-section"><h2>World</h2><div class="articles" id="world-articles"></div><button class="load-more" data-category="World">Load More</button></section>
+        <section id="business" class="sub-section"><h2>Business</h2><div class="articles" id="business-articles"></div><button class="load-more" data-category="Business">Load More</button></section>
+        <section id="tech" class="sub-section"><h2>Tech</h2><div class="articles" id="tech-articles"></div><button class="load-more" data-category="Tech">Load More</button></section>
+        <section id="sports" class="sub-section"><h2>Sports</h2><div class="articles" id="sports-articles"></div><button class="load-more" data-category="Sports">Load More</button></section>
+        <section id="entertainment" class="sub-section"><h2>Entertainment</h2><div class="articles" id="entertainment-articles"></div><button class="load-more" data-category="Entertainment">Load More</button></section>
+        <section id="education" class="sub-section"><h2>Education</h2><div class="articles" id="education-articles"></div><button class="load-more" data-category="Education">Load More</button></section>
+        <section id="lifestyle" class="sub-section"><h2>Life & Style</h2><div class="articles" id="lifestyle-articles"></div><button class="load-more" data-category="Life & Style">Load More</button></section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>About NewsMania</h3>
+                <ul><li><a href="#">About Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Careers</a></li></ul>
+            </div>
+            <div class="footer-column">
+                <h3>Advertise</h3>
+                <ul><li><a href="#">Advertise With Us</a></li><li><a href="#">Brand Solutions</a></li><li><a href="#">Media Kit</a></li></ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <p><strong>Phone:</strong> +91 98765 43210</p>
+                <p><strong>Email:</strong> <a href="mailto:contact@newsmania.com">contact@newsmania.com</a></p>
+                <p><strong>Support:</strong> <a href="mailto:support@newsmania.com">support@newsmania.com</a></p>
+                <p><strong>Address:</strong> Mumbai, India</p>
+            </div>
+            <div class="footer-column">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.333v21.334C0 23.403.597 24 1.325 24h11.494v-9.294H9.692v-3.622h3.127V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.728 0 1.325-.597 1.325-1.333V1.333C24 .597 23.403 0 22.675 0z"/></svg></a>
+                    <a href="https://x.com" target="_blank" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg></a>
+                    <a href="https://youtube.com" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.5c0 .045-7.505.045-9.376.55a3.016 3.016 0 0 0-2.122 2.136C3.5 8.775 3.5 12 3.5 12s0 3.225.002 3.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.55 9.376.55s7.505-.045 9.376-.55a3.016 3.016 0 0 0 2.122-2.136C23.5 15.225 23.5 12 23.5 12s0-3.225-.002-3.814zM9.75 15.02l-.001-6.04 5.823 3.02-5.822 3.02z"/></svg></a>
+                </div>
+                <h3 style="margin-top: 20px;">Newsletter</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© <span id="year"></span> NewsMania. All Rights Reserved. | Designed with Love in India</p>
+        </div>
+    </footer>
+
+    <button id="scroll-top">Up</button>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Current Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // HAMBURGER MENU SCRIPT
+        const hamburger = document.getElementById('hamburger');
+        const navbar = document.getElementById('navbar');
+
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navbar.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (!hamburger.contains(e.target) && !navbar.contains(e.target)) {
+                navbar.classList.remove('open');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+
+    <!-- MAIN SCRIPT -->
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - NewsMania</title>
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- YE SABSE UPAR <head> MEIN DAALO -->
+    <script>
+        // Check login BEFORE anything loads
+        if (!localStorage.getItem('adminLoggedIn')) {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+<body>
+    <header class="top-header">
+        <div class="logo">NewsMania Admin</div>
+        <button id="logout">Logout</button>
+    </header>
+
+    <main class="admin-main">
+        <section class="admin-section">
+            <h2>Manage Categories</h2>
+            <form id="category-form" class="admin-form">
+                <input type="text" id="category-name" placeholder="Category Name" required>
+                <button type="submit">Add Category</button>
+            </form>
+            <table id="categories-table" class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categories-list"></tbody>
+            </table>
+        </section>
+
+        <section class="admin-section">
+            <h2>Add New Article</h2>
+            <form id="add-form" class="admin-form">
+                <input type="text" id="title" placeholder="Title" required>
+                <textarea id="description" placeholder="Description" required></textarea>
+                <input type="text" id="imageUrl" placeholder="Image URL" required>
+                <input type="text" id="category" placeholder="Category" required>
+                <label><input type="checkbox" id="isMini"> Is Mini News</label>
+                <button type="submit">Add Article</button>
+            </form>
+        </section>
+
+        <section class="admin-section">
+            <h2>Existing Articles</h2>
+            <table id="articles-table" class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Image URL</th>
+                        <th>Category</th>
+                        <th>Is Mini</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="articles-list"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="edit-article-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Edit Article</h2>
+            <form id="edit-article-form" class="admin-form">
+                <input type="hidden" id="edit-id">
+                <input type="text" id="edit-title" placeholder="Title" required>
+                <textarea id="edit-description" placeholder="Description" required></textarea>
+                <input type="text" id="edit-imageUrl" placeholder="Image URL" required>
+                <input type="text" id="edit-category" placeholder="Category" required>
+                <label><input type="checkbox" id="edit-isMini"> Is Mini News</label>
+                <button type="submit">Update Article</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-category-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Edit Category</h2>
+            <form id="edit-category-form" class="admin-form">
+                <input type="hidden" id="edit-cat-id">
+                <input type="text" id="edit-cat-name" placeholder="Category Name" required>
+                <button type="submit">Update Category</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Logout Script -->
+    <script>
+        document.getElementById('logout').onclick = function() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'login.html';
+        };
+    </script>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

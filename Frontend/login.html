@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - NewsMania</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #b71c1c;
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">NewsMania Admin</div>
+        <div class="subtitle">Secure Access Panel</div>
+        
+        <input type="text" id="userId" placeholder="10-Digit User ID" maxlength="10">
+        <input type="password" id="password" placeholder="10-Digit Password" maxlength="10">
+        
+        <button id="loginBtn">Login</button>
+        <div class="error" id="errorMsg"></div>
+        
+        <div class="footer">© 2025 NewsMania. Protected Access.</div>
+    </div>
+
+    <script>
+        // Load credentials from admin-settings.json
+        let adminConfig = {};
+
+        async function loadConfig() {
+            try {
+                const response = await fetch('admin-settings.json');
+                if (response.ok) {
+                    adminConfig = await response.json();
+                } else {
+                    throw new Error('Config not found');
+                }
+            } catch (err) {
+                // Fallback: prompt for first-time setup
+                alert('First-time setup required!');
+                const userId = prompt('Set Admin User ID (10 digits):');
+                const password = prompt('Set Admin Password (10 digits):');
+                if (userId && password && userId.length === 10 && password.length === 10) {
+                    adminConfig = { adminUserId: userId, adminPassword: password };
+                    localStorage.setItem('adminConfig', JSON.stringify(adminConfig));
+                    alert('Admin credentials saved locally!');
+                } else {
+                    showError('Invalid setup!');
+                    return;
+                }
+            }
+        }
+
+        function showError(msg) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = msg;
+            errorMsg.style.display = 'block';
+        }
+
+        async function login() {
+            const userId = document.getElementById('userId').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+
+            errorMsg.style.display = 'none';
+            errorMsg.textContent = '';
+
+            if (userId.length !== 10 || !/^\d{10}$/.test(userId)) {
+                showError('User ID must be exactly 10 digits!');
+                return;
+            }
+            if (password.length !== 10 || !/^\d{10}$/.test(password)) {
+                showError('Password must be exactly 10 digits!');
+                return;
+            }
+
+            // Use config from file or localStorage
+            const config = adminConfig.adminUserId 
+                ? adminConfig 
+                : JSON.parse(localStorage.getItem('adminConfig') || '{}');
+
+            if (userId === config.adminUserId && password === config.adminPassword) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                window.location.href = 'admin.html';
+            } else {
+                showError('Invalid credentials!');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadConfig();
+            document.getElementById('loginBtn').addEventListener('click', login);
+
+            // Enter key login
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') login();
+            });
+        });
+    </script>
+</body>
+</html>
