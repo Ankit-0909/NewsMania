@@ -6,6 +6,11 @@ target/
 .idea/
 *.iml
 .settings/
+# Maven wrapper (ignore if you don't want to keep wrapper files)
+mvnw
+mvnw.cmd
+.mvn/
+.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
