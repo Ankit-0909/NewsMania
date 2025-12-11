@@ -1,5 +1,10 @@
 HELP.md
 target/
+src/test/
+.gitattributes
+mvnw
+mvnw.cmd
+.mvn/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -7,10 +12,7 @@ target/
 *.iml
 .settings/
 # Maven wrapper (ignore if you don't want to keep wrapper files)
-mvnw
-mvnw.cmd
-.mvn/
-.mvn/wrapper/maven-wrapper.jar
+
 
 ### STS ###
 .apt_generated
@@ -24,7 +26,7 @@ mvnw.cmd
 ### IntelliJ IDEA ###
 .idea
 *.iws
-*.iml
+
 *.ipr
 
 ### NetBeans ###
